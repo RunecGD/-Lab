@@ -1,0 +1,15 @@
+/home/german/IdeaProjects/projectC#/Lab/Lab2/bin/Debug/net9.0/Lab2
+/home/german/IdeaProjects/projectC#/Lab/Lab2/bin/Debug/net9.0/Lab2.deps.json
+/home/german/IdeaProjects/projectC#/Lab/Lab2/bin/Debug/net9.0/Lab2.runtimeconfig.json
+/home/german/IdeaProjects/projectC#/Lab/Lab2/bin/Debug/net9.0/Lab2.dll
+/home/german/IdeaProjects/projectC#/Lab/Lab2/bin/Debug/net9.0/Lab2.pdb
+/home/german/IdeaProjects/projectC#/Lab/Lab2/obj/Debug/net9.0/Lab2.GeneratedMSBuildEditorConfig.editorconfig
+/home/german/IdeaProjects/projectC#/Lab/Lab2/obj/Debug/net9.0/Lab2.AssemblyInfoInputs.cache
+/home/german/IdeaProjects/projectC#/Lab/Lab2/obj/Debug/net9.0/Lab2.AssemblyInfo.cs
+/home/german/IdeaProjects/projectC#/Lab/Lab2/obj/Debug/net9.0/Lab2.csproj.CoreCompileInputs.cache
+/home/german/IdeaProjects/projectC#/Lab/Lab2/obj/Debug/net9.0/Lab2.sourcelink.json
+/home/german/IdeaProjects/projectC#/Lab/Lab2/obj/Debug/net9.0/Lab2.dll
+/home/german/IdeaProjects/projectC#/Lab/Lab2/obj/Debug/net9.0/refint/Lab2.dll
+/home/german/IdeaProjects/projectC#/Lab/Lab2/obj/Debug/net9.0/Lab2.pdb
+/home/german/IdeaProjects/projectC#/Lab/Lab2/obj/Debug/net9.0/Lab2.genruntimeconfig.cache
+/home/german/IdeaProjects/projectC#/Lab/Lab2/obj/Debug/net9.0/ref/Lab2.dll
