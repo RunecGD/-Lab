@@ -29,7 +29,7 @@ public class Player
         // Обработка выхода за пределы
         if (newPosition >= totalCells)
         {
-            newPosition = newPosition % totalCells;
+            newPosition %= totalCells;
         }
         else if (newPosition < 0)
         {

@@ -7,7 +7,7 @@ public class Game
     public static Player Cat { get; private set; }
     public static Player Mouse { get; private set; }
     private static int totalCells;
-    public static bool noFirstCat=false, noFirstMouse=false;
+    public static bool noFirstCat, noFirstMouse;
 
     public Game(int cells)
     {
