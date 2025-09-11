@@ -3,234 +3,240 @@ using System.IO;
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
-
-struct GeneticData
-{
-    public string protein;
-    public string organism; 
-    public string amino_acids; 
-}
+using Lab1;
 
 class Program
 {
     static void Main(string[] args)
     {
-        string sequencesFile = "sequences2.txt";
-        string commandsFile = "commands2.txt";
-        string outputFile = "genedata.txt";
+        const string sequencesFileName = "sequences2.txt";
+        const string commandsFileName = "commands2.txt";
+        const string outputFileName = "genedata.txt";
 
-        if (!File.Exists(sequencesFile) || !File.Exists(commandsFile))
+        if (!File.Exists(sequencesFileName) || !File.Exists(commandsFileName))
         {
-            Console.WriteLine($"Не найдены входные файлы '{sequencesFile}' или '{commandsFile}' в текущей папке.");
+            Console.WriteLine($"Не найдены входные файлы '{sequencesFileName}' или '{commandsFileName}' в текущей папке.");
             return;
         }
 
-        var data = LoadSequences(sequencesFile);
+        List<GeneticData> geneticDataCollection = LoadSequences(sequencesFileName);
 
-        using (var writer = new StreamWriter(outputFile, false, Encoding.UTF8))
+        using (var outputWriter = new StreamWriter(outputFileName, false, Encoding.UTF8))
         {
-            writer.WriteLine("Ваше имя"); // замените на своё имя если нужно
-            writer.WriteLine("Генетический поиск");
+            outputWriter.WriteLine("Ваше имя"); // замените на своё имя если нужно
+            outputWriter.WriteLine("Генетический поиск");
 
-            int opIndex = 1;
-            foreach (var raw in File.ReadLines(commandsFile))
+            int operationIndex = 1;
+            foreach (var rawLine in File.ReadLines(commandsFileName))
             {
-                if (string.IsNullOrWhiteSpace(raw)) continue;
-                var line = raw.TrimEnd('\r','\n');
-                var parts = line.Split('\t');
-                var op = parts[0].Trim();
+                if (string.IsNullOrWhiteSpace(rawLine)) continue;
+                
+                var trimmedLine = rawLine.TrimEnd('\r','\n');
+                var commandParts = trimmedLine.Split('\t');
+                var operationType = commandParts[0].Trim();
 
-                string opnum = opIndex.ToString().PadLeft(3, '0');
-                writer.WriteLine();
-                writer.WriteLine(opnum + "\t" + line);
-                writer.WriteLine(new string('-', 40));
+                string operationNumber = operationIndex.ToString().PadLeft(3, '0');
+                outputWriter.WriteLine();
+                outputWriter.WriteLine(operationNumber + "\t" + trimmedLine);
+                outputWriter.WriteLine(new string('-', 40));
 
-                if (op.Equals("search", StringComparison.OrdinalIgnoreCase))
+                if (operationType.Equals("search", StringComparison.OrdinalIgnoreCase))
                 {
-                    if (parts.Length < 2)
+                    if (commandParts.Length < 2)
                     {
-                        writer.WriteLine("INVALID COMMAND");
+                        outputWriter.WriteLine("INVALID COMMAND");
                     }
                     else
                     {
-                        string queryEncoded = parts[1];
-                        string query = RLDecoding(queryEncoded);
+                        string encodedQuery = commandParts[1];
+                        string decodedQuery = RLDecoding(encodedQuery);
 
-                        var found = new List<(string organism, string protein)>();
-                        foreach (var g in data)
+                        var foundResults = new List<(string organism, string protein)>();
+                        foreach (var geneticData in geneticDataCollection)
                         {
-                            if (g.amino_acids.Contains(query))
-                                found.Add((g.organism, g.protein));
+                            if (geneticData.amino_acids.Contains(decodedQuery))
+                                foundResults.Add((geneticData.organism, geneticData.protein));
                         }
 
-                        if (found.Count == 0)
-                            writer.WriteLine("NOT FOUND");
+                        if (foundResults.Count == 0)
+                            outputWriter.WriteLine("NOT FOUND");
                         else
                         {
-                            foreach (var t in found)
-                                writer.WriteLine(t.organism + "\t" + t.protein);
+                            foreach (var result in foundResults)
+                                outputWriter.WriteLine(result.organism + "\t" + result.protein);
                         }
                     }
                 }
-                else if (op.Equals("diff", StringComparison.OrdinalIgnoreCase))
+                else if (operationType.Equals("diff", StringComparison.OrdinalIgnoreCase))
                 {
-                    if (parts.Length < 3)
+                    if (commandParts.Length < 3)
                     {
-                        writer.WriteLine("INVALID COMMAND");
+                        outputWriter.WriteLine("INVALID COMMAND");
                     }
                     else
                     {
-                        string p1 = parts[1];
-                        string p2 = parts[2];
+                        string proteinName1 = commandParts[1];
+                        string proteinName2 = commandParts[2];
 
-                        var g1 = data.FirstOrDefault(x => x.protein == p1);
-                        var g2 = data.FirstOrDefault(x => x.protein == p2);
+                        var geneticData1 = geneticDataCollection.FirstOrDefault(x => x.protein == proteinName1);
+                        var geneticData2 = geneticDataCollection.FirstOrDefault(x => x.protein == proteinName2);
 
-                        bool missing1 = string.IsNullOrEmpty(g1.protein);
-                        bool missing2 = string.IsNullOrEmpty(g2.protein);
+                        bool isProtein1Missing = string.IsNullOrEmpty(geneticData1.protein);
+                        bool isProtein2Missing = string.IsNullOrEmpty(geneticData2.protein);
 
-                        if (missing1 || missing2)
+                        if (isProtein1Missing || isProtein2Missing)
                         {
-                            writer.Write("amino-acids difference: ");
-                            writer.WriteLine("MISSING:" + (missing1 ? " " + p1 : "") + (missing2 ? " " + p2 : ""));
+                            outputWriter.Write("amino-acids difference: ");
+                            outputWriter.WriteLine("MISSING:" + (isProtein1Missing ? " " + proteinName1 : "") + (isProtein2Missing ? " " + proteinName2 : ""));
                         }
                         else
                         {
-                            int diff = AminoDifference(g1.amino_acids, g2.amino_acids);
-                            writer.WriteLine("amino-acids difference: " + diff);
+                            int differenceCount = AminoDifference(geneticData1.amino_acids, geneticData2.amino_acids);
+                            outputWriter.WriteLine("amino-acids difference: " + differenceCount);
                         }
                     }
                 }
-                else if (op.Equals("mode", StringComparison.OrdinalIgnoreCase))
+                else if (operationType.Equals("mode", StringComparison.OrdinalIgnoreCase))
                 {
-                    if (parts.Length < 2)
+                    if (commandParts.Length < 2)
                     {
-                        writer.WriteLine("INVALID COMMAND");
+                        outputWriter.WriteLine("INVALID COMMAND");
                     }
                     else
                     {
-                        string pname = parts[1];
-                        var g = data.FirstOrDefault(x => x.protein == pname);
-                        if (string.IsNullOrEmpty(g.protein))
+                        string proteinName = commandParts[1];
+                        var geneticData = geneticDataCollection.FirstOrDefault(x => x.protein == proteinName);
+                        if (string.IsNullOrEmpty(geneticData.protein))
                         {
-                            writer.Write("amino-acid occurs: ");
-                            writer.WriteLine("MISSING: " + pname);
+                            outputWriter.Write("amino-acid occurs: ");
+                            outputWriter.WriteLine("MISSING: " + proteinName);
                         }
                         else
                         {
-                            var (aa, count) = ModeAminoAcid(g.amino_acids);
-                            writer.WriteLine("amino-acid occurs: " + aa + " " + count);
+                            var (aminoAcid, occurrenceCount) = ModeAminoAcid(geneticData.amino_acids);
+                            outputWriter.WriteLine("amino-acid occurs: " + aminoAcid + " " + occurrenceCount);
                         }
                     }
                 }
                 else
                 {
-                    writer.WriteLine("UNKNOWN OPERATION: " + op);
+                    outputWriter.WriteLine("UNKNOWN OPERATION: " + operationType);
                 }
 
-                opIndex++;
+                operationIndex++;
             }
         }
 
-        Console.WriteLine($"Готово. Результат записан в '{outputFile}'");
+        Console.WriteLine($"Готово. Результат записан в '{outputFileName}'");
     }
 
-    static List<GeneticData> LoadSequences(string path)
+    static List<GeneticData> LoadSequences(string filePath)
     {
-        var list = new List<GeneticData>();
-        foreach (var raw in File.ReadLines(path))
+        var geneticDataList = new List<GeneticData>();
+        foreach (var rawLine in File.ReadLines(filePath))
         {
-            if (string.IsNullOrWhiteSpace(raw)) continue;
-            var parts = raw.Split('\t');
-            if (parts.Length < 3) continue;
-            var gd = new GeneticData();
-            gd.protein = parts[0];
-            gd.organism = parts[1];
-            gd.amino_acids = RLDecoding(parts[2]);
-            list.Add(gd);
+            if (string.IsNullOrWhiteSpace(rawLine)) continue;
+            var lineParts = rawLine.Split('\t');
+            if (lineParts.Length < 3) continue;
+            
+            var geneticData = new GeneticData();
+            geneticData.protein = lineParts[0];
+            geneticData.organism = lineParts[1];
+            geneticData.amino_acids = RLDecoding(lineParts[2]);
+            geneticDataList.Add(geneticData);
         }
-        return list;
+        return geneticDataList;
     }
 
-    static string RLDecoding(string s)
+    static string RLDecoding(string encodedString)
     {
-        if (string.IsNullOrEmpty(s)) return s;
-        var sb = new StringBuilder();
-        for (int i = 0; i < s.Length; i++)
+        if (string.IsNullOrEmpty(encodedString)) return encodedString;
+        var decodedBuilder = new StringBuilder();
+        for (int currentIndex = 0; currentIndex < encodedString.Length; currentIndex++)
         {
-            char c = s[i];
-            if (char.IsDigit(c))
+            char currentChar = encodedString[currentIndex];
+            if (char.IsDigit(currentChar))
             {
-                int n = c - '0';
-                if (i + 1 < s.Length)
+                int repeatCount = currentChar - '0';
+                if (currentIndex + 1 < encodedString.Length)
                 {
-                    char a = s[i + 1];
-                    for (int k = 0; k < n; k++) sb.Append(a);
-                    i++; // skip letter
+                    char aminoAcid = encodedString[currentIndex + 1];
+                    for (int repetition = 0; repetition < repeatCount; repetition++) 
+                        decodedBuilder.Append(aminoAcid);
+                    currentIndex++; // пропускаем букву
                 }
                 else
                 {
-                    sb.Append(c);
+                    decodedBuilder.Append(currentChar);
                 }
             }
             else
             {
-                sb.Append(c);
+                decodedBuilder.Append(currentChar);
             }
         }
-        return sb.ToString();
+        return decodedBuilder.ToString();
     }
 
-    static string RLEncoding(string s)
+    static string RLEncoding(string decodedString)
     {
-        if (string.IsNullOrEmpty(s)) return s;
-        var sb = new StringBuilder();
-        int i = 0;
-        while (i < s.Length)
+        if (string.IsNullOrEmpty(decodedString)) return decodedString;
+        var encodedBuilder = new StringBuilder();
+        int currentIndex = 0;
+        while (currentIndex < decodedString.Length)
         {
-            char c = s[i];
-            int j = i + 1;
-            while (j < s.Length && s[j] == c && j - i < 9) j++;
-            int run = j - i;
-            if (run >= 3)
+            char currentAminoAcid = decodedString[currentIndex];
+            int nextIndex = currentIndex + 1;
+            while (nextIndex < decodedString.Length && decodedString[nextIndex] == currentAminoAcid && nextIndex - currentIndex < 9) 
+                nextIndex++;
+            
+            int runLength = nextIndex - currentIndex;
+            if (runLength >= 3)
             {
-                sb.Append(run);
-                sb.Append(c);
+                encodedBuilder.Append(runLength);
+                encodedBuilder.Append(currentAminoAcid);
             }
             else
             {
-                for (int k = 0; k < run; k++) sb.Append(c);
+                for (int repetition = 0; repetition < runLength; repetition++) 
+                    encodedBuilder.Append(currentAminoAcid);
             }
-            i = j;
+            currentIndex = nextIndex;
         }
-        return sb.ToString();
+        return encodedBuilder.ToString();
     }
 
-    static int AminoDifference(string a, string b)
+    static int AminoDifference(string aminoAcids1, string aminoAcids2)
     {
-        int max = Math.Max(a.Length, b.Length);
-        int diff = 0;
-        for (int i = 0; i < max; i++)
+        int maxLength = Math.Max(aminoAcids1.Length, aminoAcids2.Length);
+        int differenceCount = 0;
+        for (int position = 0; position < maxLength; position++)
         {
-            char ca = i < a.Length ? a[i] : '\0';
-            char cb = i < b.Length ? b[i] : '\0';
-            if (ca != cb) diff++;
+            char aminoAcid1 = position < aminoAcids1.Length ? aminoAcids1[position] : '\0';
+            char aminoAcid2 = position < aminoAcids2.Length ? aminoAcids2[position] : '\0';
+            if (aminoAcid1 != aminoAcid2) differenceCount++;
         }
-        return diff;
+        return differenceCount;
     }
 
-    static (char aa, int count) ModeAminoAcid(string s)
+    static (char aminoAcid, int count) ModeAminoAcid(string aminoAcidSequence)
     {
-        var counts = new Dictionary<char,int>();
-        foreach (char c in s)
+        var aminoAcidCounts = new Dictionary<char, int>();
+        foreach (char aminoAcid in aminoAcidSequence)
         {
-            if (!counts.ContainsKey(c)) counts[c] = 0;
-            counts[c]++;
+            if (!aminoAcidCounts.ContainsKey(aminoAcid)) aminoAcidCounts[aminoAcid] = 0;
+            aminoAcidCounts[aminoAcid]++;
         }
-        if (counts.Count == 0) return ('?', 0);
-        int max = counts.Values.Max();
-        var candidates = counts.Where(p => p.Value == max).Select(p => p.Key).ToList();
-        candidates.Sort();
-        return (candidates[0], max);
+        
+        if (aminoAcidCounts.Count == 0) return ('?', 0);
+        
+        int maxCount = aminoAcidCounts.Values.Max();
+        var mostFrequentAminoAcids = aminoAcidCounts
+            .Where(entry => entry.Value == maxCount)
+            .Select(entry => entry.Key)
+            .ToList();
+            
+        mostFrequentAminoAcids.Sort();
+        return (mostFrequentAminoAcids[0], maxCount);
     }
 }
