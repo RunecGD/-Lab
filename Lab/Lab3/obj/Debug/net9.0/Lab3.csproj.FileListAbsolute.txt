@@ -1,0 +1,15 @@
+/home/german/IdeaProjects/projectC#/Lab/Lab3/bin/Debug/net9.0/Lab3
+/home/german/IdeaProjects/projectC#/Lab/Lab3/bin/Debug/net9.0/Lab3.deps.json
+/home/german/IdeaProjects/projectC#/Lab/Lab3/bin/Debug/net9.0/Lab3.runtimeconfig.json
+/home/german/IdeaProjects/projectC#/Lab/Lab3/bin/Debug/net9.0/Lab3.dll
+/home/german/IdeaProjects/projectC#/Lab/Lab3/bin/Debug/net9.0/Lab3.pdb
+/home/german/IdeaProjects/projectC#/Lab/Lab3/obj/Debug/net9.0/Lab3.GeneratedMSBuildEditorConfig.editorconfig
+/home/german/IdeaProjects/projectC#/Lab/Lab3/obj/Debug/net9.0/Lab3.AssemblyInfoInputs.cache
+/home/german/IdeaProjects/projectC#/Lab/Lab3/obj/Debug/net9.0/Lab3.AssemblyInfo.cs
+/home/german/IdeaProjects/projectC#/Lab/Lab3/obj/Debug/net9.0/Lab3.csproj.CoreCompileInputs.cache
+/home/german/IdeaProjects/projectC#/Lab/Lab3/obj/Debug/net9.0/Lab3.sourcelink.json
+/home/german/IdeaProjects/projectC#/Lab/Lab3/obj/Debug/net9.0/Lab3.dll
+/home/german/IdeaProjects/projectC#/Lab/Lab3/obj/Debug/net9.0/refint/Lab3.dll
+/home/german/IdeaProjects/projectC#/Lab/Lab3/obj/Debug/net9.0/Lab3.pdb
+/home/german/IdeaProjects/projectC#/Lab/Lab3/obj/Debug/net9.0/Lab3.genruntimeconfig.cache
+/home/german/IdeaProjects/projectC#/Lab/Lab3/obj/Debug/net9.0/ref/Lab3.dll
