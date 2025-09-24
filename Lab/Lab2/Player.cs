@@ -5,28 +5,27 @@ public class Player
     public string Name { get; set; }
     public int Position { get; private set; }
     public int Distance { get; private set; }
-    public bool InGame { get; private set; }
+    public PlayerState State { get; private set; }
 
     public Player(string name)
     {
         Name = name;
-        Position = -1; // Игрок не в игре изначально
+        Position = -1;
         Distance = 0;
-        InGame = false;
+        State = PlayerState.NotInGame; 
     }
 
     public void Move(int moveAmount, int totalCells)
     {
-        if (!InGame)
+        if (State == PlayerState.NotInGame)
         {
             Position = moveAmount;
-            InGame = true;
+            State = PlayerState.InGame; 
             return;
         }
 
         int newPosition = Position + moveAmount;
 
-        // Обработка выхода за пределы
         if (newPosition >= totalCells)
         {
             newPosition %= totalCells;
@@ -41,7 +40,6 @@ public class Player
 
     public void setDistance(int number)
     {
-        
-        Distance+=Math.Abs(number);
+        Distance += Math.Abs(number);
     }
 }

@@ -7,7 +7,9 @@ namespace Lab2
         static void Main(string[] args)
         {
             GameManager gameManager = new GameManager();
-            gameManager.StartGame("/home/german/IdeaProjects/projectC#/Lab/Lab2/ChaseData.txt");
+            gameManager.StartGame("ChaseData.txt", "PursuitLog.txt");
+            gameManager.StartGame("ChaseData1.txt", "PursuitLog1.txt");
+            gameManager.StartGame("ChaseData2.txt", "PursuitLog2.txt");
         }
     }
 }

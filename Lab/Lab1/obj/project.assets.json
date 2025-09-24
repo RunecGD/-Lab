@@ -1,11 +1,30 @@
 {
   "version": 3,
   "targets": {
-    "net9.0": {}
+    "net9.0": {
+      "Lab2/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v9.0",
+        "compile": {
+          "bin/placeholder/Lab2.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Lab2.dll": {}
+        }
+      }
+    }
   },
-  "libraries": {},
+  "libraries": {
+    "Lab2/1.0.0": {
+      "type": "project",
+      "path": "../Lab2/Lab2.csproj",
+      "msbuildProject": "../Lab2/Lab2.csproj"
+    }
+  },
   "projectFileDependencyGroups": {
-    "net9.0": []
+    "net9.0": [
+      "Lab2 >= 1.0.0"
+    ]
   },
   "packageFolders": {
     "/home/german/.nuget/packages/": {}
@@ -32,7 +51,11 @@
       "frameworks": {
         "net9.0": {
           "targetAlias": "net9.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "/home/german/IdeaProjects/projectC#/Lab/Lab2/Lab2.csproj": {
+              "projectPath": "/home/german/IdeaProjects/projectC#/Lab/Lab2/Lab2.csproj"
+            }
+          }
         }
       },
       "warningProperties": {

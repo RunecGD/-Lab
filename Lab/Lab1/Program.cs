@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using Lab1;
+using Lab2;
 
 class Program
 {
@@ -33,4 +34,5 @@ class Program
 
         Console.WriteLine($"Готово. Результат записан в '{outputFileName}'");
     }
+
 }
