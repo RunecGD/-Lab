@@ -1,0 +1,15 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="HospitalApp.MainWindow"
+        Title="Hospital Management" Width="1200" Height="500" Background="LightGray">
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Left" Width="125">
+            <Button Name="AddPatientButton" Content="+" Background="Gray" Click="OnAddPatientClick" />
+            <Button Name="StartWork" Content="Start" Background="Gray"/>
+            <ListBox Name="PatientsList" Background="Black" Foreground="White"/>
+        </StackPanel>
+        <Border Background="Black" Width="2" VerticalAlignment="Stretch" Margin="0,5" />
+
+        <ContentPresenter Name="ContentArea" />
+    </DockPanel>
+</Window>

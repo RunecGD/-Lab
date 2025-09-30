@@ -2,7 +2,7 @@ namespace Lab3;
 
 class Text
 {
-    public List<Sentence> Sentences { get; private set; } = new List<Sentence>();
+    public List<Sentence> Sentences { get; } = new List<Sentence>();
 
     public void AddSentence(Sentence sentence)
     {
