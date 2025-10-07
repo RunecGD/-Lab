@@ -1,127 +1,102 @@
-﻿// See https://aka.ms/new-console-template for more information
-namespace Lab3;
-using System;
-using System.IO;
-using System.Text.RegularExpressions;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Text;
+using Lab3;
 
 class Program
 {
-    static void Main()
+    static void Main(string[] args)
     {
-        string filePath = "/home/german/IdeaProjects/projectC#/Lab/Lab3/Text.txt";
-        Text parsedText = ParseFile(filePath);
+        Console.OutputEncoding = Encoding.UTF8;
 
-        Console.WriteLine("Парсированный текст:");
-        Console.WriteLine(parsedText);
+        Console.WriteLine("Выберите язык текста для парсинга:");
+        Console.WriteLine("1 - Русский");
+        Console.WriteLine("2 - English");
+        Console.Write("Ваш выбор: ");
+        string? choice = Console.ReadLine();
 
-        // Вызов новых функций
-        PrintSentencesByWordCount(parsedText);
-        PrintSentencesByLength(parsedText);
-        FindWordsInQuestions(parsedText, 4); // Пример длины слова
-        RemoveWordsByLength(parsedText, 3); // Пример длины слова
-    }
-
-    static Text ParseFile(string filePath)
-    {
-        var result = new Text();
-
-        try
+        string inputPath;
+        if (choice == "1")
         {
-            string fileContent = File.ReadAllText(filePath);
-            string pattern = @"(\w+|[.,!?;:])";
-
-            List<string> tokens = new List<string>();
-            foreach (Match match in Regex.Matches(fileContent, pattern))
+            inputPath = "input_ru.txt";
+            if (!File.Exists(inputPath))
             {
-                tokens.Add(match.Value);
+                File.WriteAllText(inputPath,
+                    "Пример: Это первое предложение. Как тебя зовут? Это третий тест, с запятой!");
+                Console.WriteLine($"Файл {inputPath} не найден, создан пример.");
             }
-
-            string sentence = string.Empty;
-            foreach (var token in tokens)
+        }
+        else
+        {
+            inputPath = "input_en.txt";
+            if (!File.Exists(inputPath))
             {
-                sentence += token + " ";
-                if (token.EndsWith(".") || token.EndsWith("!") || token.EndsWith("?"))
+                File.WriteAllText(inputPath,
+                    "Example: This is the first sentence. How are you? This is the third test, with a comma!");
+                Console.WriteLine($"File {inputPath} not found, created a sample.");
+            }
+        }
+
+        string textContent = File.ReadAllText(inputPath, Encoding.UTF8);
+
+        var parser = new TextParser(textContent);
+        var text = parser.Parse();
+        var text1 = text;
+        text1.WriteSentencesByWordCount("output_by_wordcount.txt");
+        var text2 = text;
+        text2.WriteSentencesByLength("output_by_length.txt");
+        var text3 = text;
+        Console.Write("Введите длину для записи: ");
+        int len = Convert.ToInt32(Console.ReadLine());
+        text3.WriteWordsOfLengthInQuestions("output_question_words_len4.txt", len);
+        
+        Console.Write("Введите длину слов, которые нужно удалить (начинающиеся с согласной): ");
+        var text4 = text;
+        if (int.TryParse(Console.ReadLine(), out int removeLength))
+        {
+            var removed = text4.RemoveWordsOfLengthStartingWithConsonant(removeLength);
+            File.WriteAllText($"output_removed_len{removeLength}_consonant.txt", removed.ToString(), Encoding.UTF8);
+            Console.WriteLine($"Удалены слова длины {removeLength}, начинающиеся с согласной → output_removed_len{removeLength}_consonant.txt");
+        }
+
+        Console.Write("Введите номер предложения (начиная с 1), где нужно заменить слова: ");
+        var text5 = text;
+        if (int.TryParse(Console.ReadLine(), out int sentenceNum))
+        {
+            Console.Write("Введите длину слов для замены: ");
+            if (int.TryParse(Console.ReadLine(), out int replaceLength))
+            {
+                Console.Write("Введите строку для замены: ");
+                string? replacement = Console.ReadLine();
+                if (!string.IsNullOrEmpty(replacement))
                 {
-                    result.AddSentence(new Sentence(sentence.Trim()));
-                    sentence = string.Empty;
-                }
-            }
-
-            if (!string.IsNullOrWhiteSpace(sentence))
-            {
-                result.AddSentence(new Sentence(sentence.Trim()));
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Ошибка при чтении файла: {ex.Message}");
-        }
-
-        return result;
-    }
-
-    // Функция 1: Вывести все предложения в порядке возрастания количества слов
-    static void PrintSentencesByWordCount(Text text)
-    {
-        var sortedSentences = text.Sentences.OrderBy(s => s.Content.Split(' ').Length);
-        Console.WriteLine("\nПредложения по возрастанию количества слов:");
-        foreach (var sentence in sortedSentences)
-        {
-            Console.WriteLine(sentence.Content);
-        }
-    }
-
-    // Функция 2: Вывести все предложения в порядке возрастания длины предложения
-    static void PrintSentencesByLength(Text text)
-    {
-        var sortedSentences = text.Sentences.OrderBy(s => s.Content.Length);
-        Console.WriteLine("\nПредложения по возрастанию длины:");
-        foreach (var sentence in sortedSentences)
-        {
-            Console.WriteLine(sentence.Content);
-        }
-    }
-
-    // Функция 3: Найти слова заданной длины в вопросительных предложениях
-    static void FindWordsInQuestions(Text text, int wordLength)
-    {
-        var wordsSet = new HashSet<string>();
-        foreach (var sentence in text.Sentences)
-        {
-            if (sentence.Content.EndsWith("?"))
-            {
-                var words = sentence.Content.Split(' ');
-                foreach (var word in words)
-                {
-                    if (word.Length == wordLength)
+                    try
                     {
-                        wordsSet.Add(word);
+                        text5.ReplaceWordsInSentence(sentenceNum - 1, replaceLength, replacement);
+                        File.WriteAllText($"output_replace_sentence{sentenceNum}_len{replaceLength}.txt",
+                            text5.Sentences[sentenceNum - 1].ToString(), Encoding.UTF8);
+                        Console.WriteLine($"Слова длины {replaceLength} заменены в предложении {sentenceNum} → output_replace_sentence{sentenceNum}_len{replaceLength}.txt");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Ошибка при замене: " + ex.Message);
                     }
                 }
             }
         }
 
-        Console.WriteLine($"\nУникальные слова длины {wordLength} в вопросительных предложениях:");
-        foreach (var word in wordsSet)
-        {
-            Console.WriteLine(word);
-        }
-    }
+        var stopWords = new List<string>();
+        if (choice == "1" && File.Exists("stopwords_ru.txt"))
+            stopWords.AddRange(File.ReadAllLines("stopwords_ru.txt", Encoding.UTF8));
+        if (choice == "2" && File.Exists("stopwords_en.txt"))
+            stopWords.AddRange(File.ReadAllLines("stopwords_en.txt", Encoding.UTF8));
 
-    // Функция 4: Удалить из текста все слова заданной длины, начинающиеся с согласной буквы
-    static void RemoveWordsByLength(Text text, int wordLength)
-    {
-        foreach (var sentence in text.Sentences)
+        if (stopWords.Any())
         {
-            var words = sentence.Content.Split(' ')
-                .Where(word => !(word.Length == wordLength && "бвгджзклмнпрстфхцчшщБВГДЖЗКЛМНПРСЕФХЦЧШЩ".Contains(word[0])))
-                .ToList();
-            sentence.Content = string.Join(" ", words);
+            var noStops = text.RemoveStopWords(stopWords);
+            File.WriteAllText("output_no_stopwords.txt", noStops.ToString(), Encoding.UTF8);
         }
+        
+        text.ExportToXml("output_text.xml");
 
-        Console.WriteLine($"\nТекст после удаления слов длины {wordLength}, начинающихся с согласной буквы:");
-        Console.WriteLine(text);
+        Console.WriteLine("Обработка завершена.");
     }
 }
