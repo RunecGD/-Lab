@@ -5,13 +5,20 @@ namespace Lab3;
 [Serializable]
 public class Word : Token
 {
-    [XmlText]
-    public string Value { get; set; }
+    [XmlText] public string Value { get; set; }
 
-    public Word() { }
-    public Word(string v) { Value = v; }
+    public Word()
+    {
+    }
 
-    public override string Text => Value;
+    public Word(string value)
+    {
+        Value = value;
+    }
 
-    public override string ToString() => Value;
+    public override string Text
+        => Value;
+
+    public override string ToString()
+        => Value;
 }

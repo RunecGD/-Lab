@@ -5,11 +5,16 @@ namespace Lab3;
 [Serializable]
 public class Punctuation : Token
 {
-    [XmlText]
-    public string Symbol { get; set; }
+    [XmlText] public string Symbol { get; set; }
 
-    public Punctuation() { }
-    public Punctuation(string s) { Symbol = s; }
+    public Punctuation()
+    {
+    }
+
+    public Punctuation(string symbol)
+    {
+        Symbol = symbol;
+    }
 
     public override string Text => Symbol;
 

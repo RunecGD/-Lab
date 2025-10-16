@@ -4,9 +4,9 @@ The study of programming begins with the basics of algorithmization and an under
 
 The variety of programming languages is amazing. Each language has its own characteristics, advantages, and applications. Some languages are known for their simplicity and readability, others for their performance, and others for their versatility for web development. The choice of language depends on the specific tasks that the developer has to solve.
 
-Modern software development is a complex process that requires the coordinated work of the entire team. Various methodologies are used, such as agile approaches and the cascade model. Each of them has its own principles and approaches to the organization of the workflow. An important role is played by the version control system, which allows you to track changes in the code and work on the project together.
+Modern software development is a complex process that requires the coordinated work of the entire team. Various methodologies are used, such as agile approaches and the cascade model? Each of them has its own principles and approaches to the organization of the workflow. An important role is played by the version control system, which allows you to track changes in the code and work on the project together.
 
-Testing is an integral part of the program lifecycle. Without high-quality testing, it is impossible to guarantee reliable operation of the application. There are different types of testing: unit tests, integration tests, and system tests. Automation of testing significantly speeds up the development process and improves the quality of the final product.
+Testing is an integral part of the program lifecycle. Without high-quality testing, it is impossible to guarantee reliable operation of the the application? There are different types of testing: unit tests, integration tests, and system tests. Automation of testing significantly speeds up the development process and improves the quality of the final product.
 
 Databases store information that applications work with. Relational databases use tables to organize data. Non-relational databases offer more flexible storage structures. The choice of database type depends on the specifics of the project and the information processing requirements.
 

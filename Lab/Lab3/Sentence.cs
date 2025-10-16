@@ -25,13 +25,13 @@ public class Sentence
     {
         for (int i = Tokens.Count - 1; i >= 0; i--)
         {
-            var t = Tokens[i];
-            if (t is Punctuation)
+            var token = Tokens[i];
+            if (token is Punctuation)
             {
-                if (((Punctuation)t).Symbol.Contains("?")) return true;
-                if (((Punctuation)t).Symbol.Trim().Length > 0 && ".!".Contains(((Punctuation)t).Symbol.Trim()[0])) return false;
+                if (((Punctuation)token).Symbol.Contains("?")) return true;
+                if (((Punctuation)token).Symbol.Trim().Length > 0 && ".!".Contains(((Punctuation)token).Symbol.Trim()[0])) return false;
             }
-            else if (t is Word)
+            else if (token is Word)
             {
                 return false;
             }
@@ -42,9 +42,9 @@ public class Sentence
     public override string ToString()
     {
         var sb = new StringBuilder();
-        foreach (var t in Tokens)
+        foreach (var token in Tokens)
         {
-            if (t is Word)
+            if (token is Word)
             {
                 if (sb.Length > 0)
                 {
@@ -52,11 +52,11 @@ public class Sentence
                     if (!char.IsWhiteSpace(last) && last != '(' && last != '«' && last != '"' && last != '—')
                         sb.Append(' ');
                 }
-                sb.Append(t.Text);
+                sb.Append(token.Text);
             }
-            else if (t is Punctuation)
+            else if (token is Punctuation)
             {
-                sb.Append(t.Text);
+                sb.Append(token.Text);
             }
         }
         return sb.ToString().Trim();

@@ -13,27 +13,31 @@ class Program
         Console.Write("Ваш выбор: ");
         string? choice = Console.ReadLine();
 
-        string inputPath;
-        if (choice == "1")
+        string inputPath=null;
+        switch (choice)
         {
-            inputPath = "input_ru.txt";
-            if (!File.Exists(inputPath))
-            {
-                File.WriteAllText(inputPath,
-                    "Пример: Это первое предложение. Как тебя зовут? Это третий тест, с запятой!");
-                Console.WriteLine($"Файл {inputPath} не найден, создан пример.");
-            }
-        }
-        else
-        {
-            inputPath = "input_en.txt";
-            if (!File.Exists(inputPath))
-            {
-                File.WriteAllText(inputPath,
-                    "Example: This is the first sentence. How are you? This is the third test, with a comma!");
-                Console.WriteLine($"File {inputPath} not found, created a sample.");
-            }
-        }
+            case "1":
+                inputPath = "input_ru.txt";
+                if (!File.Exists(inputPath))
+                {
+                    File.WriteAllText(inputPath,
+                        "Пример: Это первое предложение. Как тебя зовут? Это третий тест, с запятой!");
+                    Console.WriteLine($"Файл {inputPath} не найден, создан пример.");
+                }
+                break;
+            case "2":
+                inputPath = "input_en.txt";
+                if (!File.Exists(inputPath))
+                {
+                    File.WriteAllText(inputPath,
+                        "Example: This is the first sentence. How are you? This is the third test, with a comma!");
+                    Console.WriteLine($"File {inputPath} not found, created a sample.");
+                }
+                break;
+            default:
+                Console.WriteLine("Не верный ввод");
+                return;
+        }   
 
         string textContent = File.ReadAllText(inputPath, Encoding.UTF8);
 
@@ -56,9 +60,10 @@ class Program
             File.WriteAllText($"output_removed_len{removeLength}_consonant.txt", removed.ToString(), Encoding.UTF8);
             Console.WriteLine($"Удалены слова длины {removeLength}, начинающиеся с согласной → output_removed_len{removeLength}_consonant.txt");
         }
-
+        
         Console.Write("Введите номер предложения (начиная с 1), где нужно заменить слова: ");
         var text5 = text;
+        var text6 = text;
         if (int.TryParse(Console.ReadLine(), out int sentenceNum))
         {
             Console.Write("Введите длину слов для замены: ");
@@ -82,21 +87,24 @@ class Program
                 }
             }
         }
-
+        
         var stopWords = new List<string>();
         if (choice == "1" && File.Exists("stopwords_ru.txt"))
             stopWords.AddRange(File.ReadAllLines("stopwords_ru.txt", Encoding.UTF8));
         if (choice == "2" && File.Exists("stopwords_en.txt"))
             stopWords.AddRange(File.ReadAllLines("stopwords_en.txt", Encoding.UTF8));
-
+        
         if (stopWords.Any())
         {
-            var noStops = text.RemoveStopWords(stopWords);
+            var noStops = text6.RemoveStopWords(stopWords);
             File.WriteAllText("output_no_stopwords.txt", noStops.ToString(), Encoding.UTF8);
         }
         
         text.ExportToXml("output_text.xml");
+        text.WriteWordStatistics("output_word_statistics.txt");
+        Console.WriteLine("Записана статистика слов → output_word_statistics.txt");
 
         Console.WriteLine("Обработка завершена.");
     }
+    
 }

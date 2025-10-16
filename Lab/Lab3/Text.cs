@@ -1,3 +1,4 @@
+using System.Text;
 using System.Xml.Serialization;
 using Lab3;
 
@@ -30,14 +31,14 @@ public class Text
     public void WriteWordsOfLengthInQuestions(string path, int length)
     {
         var set = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-        foreach (var s in Sentences)
+        foreach (var sentence in Sentences)
         {
-            if (s.IsQuestion())
+            if (sentence.IsQuestion())
             {
-                foreach (var w in s.Words)
+                foreach (var word in sentence.Words)
                 {
-                    if (GetUnicodeLength(w.Value) == length)
-                        set.Add(w.Value);
+                    if (GetUnicodeLength(word.Value) == length)
+                        set.Add(word.Value);
                 }
             }
         }
@@ -49,25 +50,25 @@ public class Text
     public Text RemoveWordsOfLengthStartingWithConsonant(int length)
     {
         var result = new Text();
-        foreach (var s in Sentences)
+        foreach (var sentence in Sentences)
         {
-            var ns = new Sentence();
-            foreach (var t in s.Tokens)
+            var newSentence = new Sentence();
+            foreach (var token in sentence.Tokens)
             {
-                if (t is Word w)
+                if (token is Word word)
                 {
-                    if (GetUnicodeLength(w.Value) == length && StartsWithConsonant(w.Value))
+                    if (GetUnicodeLength(word.Value) == length && StartsWithConsonant(word.Value))
                     {
                         continue;
                     }
-                    else ns.Add(new Word(w.Value));
+                    else newSentence.Add(new Word(word.Value));
                 }
-                else if (t is Punctuation p)
+                else if (token is Punctuation punctuation)
                 {
-                    ns.Add(new Punctuation(p.Symbol));
+                    newSentence.Add(new Punctuation(punctuation.Symbol));
                 }
             }
-            result.Add(ns);
+            result.Add(newSentence);
         }
         return result;
     }
@@ -77,14 +78,14 @@ public class Text
         if (sentenceIndex < 0 || sentenceIndex >= Sentences.Count)
             throw new ArgumentOutOfRangeException(nameof(sentenceIndex));
 
-        var s = Sentences[sentenceIndex];
-        for (int i = 0; i < s.Tokens.Count; i++)
+        var sentence = Sentences[sentenceIndex];
+        for (int i = 0; i < sentence.Tokens.Count; i++)
         {
-            if (s.Tokens[i] is Word w)
+            if (sentence.Tokens[i] is Word word)
             {
-                if (GetUnicodeLength(w.Value) == wordLength)
+                if (GetUnicodeLength(word.Value) == wordLength)
                 {
-                    s.Tokens[i] = new Word(replacement);
+                    sentence.Tokens[i] = new Word(replacement);
                 }
             }
         }
@@ -94,19 +95,19 @@ public class Text
     {
         var set = new HashSet<string>(stopWords.Where(x => !string.IsNullOrWhiteSpace(x)).Select(x => x.Trim()), StringComparer.OrdinalIgnoreCase);
         var result = new Text();
-        foreach (var s in Sentences)
+        foreach (var sentence in Sentences)
         {
-            var ns = new Sentence();
-            foreach (var t in s.Tokens)
+            var newSentence = new Sentence();
+            foreach (var token in sentence.Tokens)
             {
-                if (t is Word w)
+                if (token is Word word)
                 {
-                    if (!set.Contains(w.Value))
-                        ns.Add(new Word(w.Value));
+                    if (!set.Contains(word.Value))
+                        newSentence.Add(new Word(word.Value));
                 }
-                else ns.Add(new Punctuation(((Punctuation)t).Symbol));
+                else newSentence.Add(new Punctuation(((Punctuation)token).Symbol));
             }
-            result.Add(ns);
+            result.Add(newSentence);
         }
         return result;
     }
@@ -135,8 +136,50 @@ public class Text
         return true;
     }
 
-    static int GetUnicodeLength(string s)
+    static int GetUnicodeLength(string sentence)
     {
-        return s.Length;
+        return sentence.Length;
     }
+    public void WriteWordStatistics(string path)
+    {
+        var wordMap = new Dictionary<string, List<int>>(StringComparer.OrdinalIgnoreCase);
+
+        for (int i = 0; i < Sentences.Count; i++)
+        {
+            var sentence = Sentences[i];
+            foreach (var word in sentence.Words)
+            {
+                string cleaned = word.Value.Trim().ToLower();
+
+                if (string.IsNullOrWhiteSpace(cleaned))
+                    continue;
+
+                if (!wordMap.ContainsKey(cleaned))
+                    wordMap[cleaned] = new List<int>();
+
+                wordMap[cleaned].Add(i + 1); // добавляем номер предложения
+            }
+        }
+
+        int maxWordLength = wordMap.Keys.Max(w => w.Length);
+        var lines = new List<string>();
+
+        foreach (var kvp in wordMap.OrderBy(k => k.Key))
+        {
+            string word = kvp.Key;
+            int count = kvp.Value.Count; // сколько раз встретилось в тексте
+            var sentenceList = kvp.Value.Distinct().OrderBy(x => x);
+            string sentenceNums = string.Join(" ", sentenceList);
+
+            int dotCount = Math.Max(1, (maxWordLength + 5) - word.Length);
+            string dots = new string('.', dotCount);
+
+            string line = $"{word}{dots}{count}: {sentenceNums}";
+            lines.Add(line);
+        }
+
+        File.WriteAllLines(path, lines, Encoding.UTF8);
+    }
+
+
 }
