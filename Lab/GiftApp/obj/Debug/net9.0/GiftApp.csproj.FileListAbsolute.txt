@@ -1,0 +1,15 @@
+/home/german/IdeaProjects/projectC#/Lab/GiftApp/bin/Debug/net9.0/GiftApp
+/home/german/IdeaProjects/projectC#/Lab/GiftApp/bin/Debug/net9.0/GiftApp.deps.json
+/home/german/IdeaProjects/projectC#/Lab/GiftApp/bin/Debug/net9.0/GiftApp.runtimeconfig.json
+/home/german/IdeaProjects/projectC#/Lab/GiftApp/bin/Debug/net9.0/GiftApp.dll
+/home/german/IdeaProjects/projectC#/Lab/GiftApp/bin/Debug/net9.0/GiftApp.pdb
+/home/german/IdeaProjects/projectC#/Lab/GiftApp/obj/Debug/net9.0/GiftApp.GeneratedMSBuildEditorConfig.editorconfig
+/home/german/IdeaProjects/projectC#/Lab/GiftApp/obj/Debug/net9.0/GiftApp.AssemblyInfoInputs.cache
+/home/german/IdeaProjects/projectC#/Lab/GiftApp/obj/Debug/net9.0/GiftApp.AssemblyInfo.cs
+/home/german/IdeaProjects/projectC#/Lab/GiftApp/obj/Debug/net9.0/GiftApp.csproj.CoreCompileInputs.cache
+/home/german/IdeaProjects/projectC#/Lab/GiftApp/obj/Debug/net9.0/GiftApp.sourcelink.json
+/home/german/IdeaProjects/projectC#/Lab/GiftApp/obj/Debug/net9.0/GiftApp.dll
+/home/german/IdeaProjects/projectC#/Lab/GiftApp/obj/Debug/net9.0/refint/GiftApp.dll
+/home/german/IdeaProjects/projectC#/Lab/GiftApp/obj/Debug/net9.0/GiftApp.pdb
+/home/german/IdeaProjects/projectC#/Lab/GiftApp/obj/Debug/net9.0/GiftApp.genruntimeconfig.cache
+/home/german/IdeaProjects/projectC#/Lab/GiftApp/obj/Debug/net9.0/ref/GiftApp.dll

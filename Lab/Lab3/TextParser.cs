@@ -37,7 +37,7 @@ public class TextParser
                 }
                 i++;
                 continue;
-            }
+            } 
 
             if (PunctChars.Contains(ch))
             {
