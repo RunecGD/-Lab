@@ -7,7 +7,7 @@ namespace GiftApp
         static void Main(string[] args)
         {
             var giftService = new GiftService();
-            giftService.CreateGift();
+            giftService.ShowMainMenu();
         }
     }
 }

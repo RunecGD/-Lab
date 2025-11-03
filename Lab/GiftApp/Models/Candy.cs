@@ -1,21 +1,31 @@
-namespace Models
+using System.Xml.Serialization;
+
+[XmlInclude(typeof(ChocolateCandy))]
+[XmlInclude(typeof(HardCandy))]
+public abstract class Candy  // Объявляем класс абстрактным
 {
-    public abstract class Candy
+    [XmlElement("Name")]
+    public string Name { get; set; }
+
+    [XmlElement("Weight")]
+    public double Weight { get; set; }
+
+    [XmlElement("SugarContent")]
+    public double SugarContent { get; set; }
+
+    protected Candy() { }  // Параметрный конструктор без параметров
+
+    protected Candy(string name, double weight, double sugarContent)
     {
-        public string Name { get; }
-        public double Weight { get; }
-        public double SugarContent { get; }
+        Name = name ?? throw new ArgumentNullException(nameof(name));
+        Weight = weight;
+        SugarContent = sugarContent;
+    }
 
-        protected Candy(string name, double weight, double sugarContent)
-        {
-            Name = name;
-            Weight = weight;
-            SugarContent = sugarContent;
-        }
+    public abstract string GetCandyInfo();  // Абстрактный метод
 
-        public override string ToString()
-        {
-            return $"{Name} (Weight: {Weight}g, Sugar: {SugarContent}g)";
-        }
+    public override string ToString()
+    {
+        return GetCandyInfo();
     }
 }
